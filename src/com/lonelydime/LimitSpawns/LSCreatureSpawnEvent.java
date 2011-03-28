@@ -12,7 +12,6 @@ public class LSCreatureSpawnEvent extends EntityListener{
     }
 	
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
-		String[] blockids;
 		boolean allowSpawn = true;
 		//gets the block at the location of spawn
 		Block spawnblock = event.getEntity().getLocation().getWorld().getBlockAt(event.getEntity().getLocation().getBlockX(),
@@ -20,12 +19,10 @@ public class LSCreatureSpawnEvent extends EntityListener{
 				event.getEntity().getLocation().getBlockZ());
 		int spawnbid = spawnblock.getTypeId();
 		
-		blockids = LimitSpawns.nospawnblocks.split(",");
-		
-		for (int i=0;i<blockids.length;i++) {
-			if (Integer.parseInt(blockids[i]) == spawnbid)
-				allowSpawn = false;
-		}
+		String curWorld = event.getEntity().getLocation().getWorld().getName();
+
+		if (LimitSpawns.worldConfigs.get(curWorld).indexOf(spawnbid) != -1)
+			allowSpawn = false;
 		
 		if (!allowSpawn) {
 			event.setCancelled(true);
